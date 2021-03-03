@@ -205,6 +205,7 @@ int main(int argc, char *argv[])
 	// read the osm.pbf file (eliminate "dead ends" as this reduces the possibility for error of the algorithm computing the exterior circle)
 	// Todo: for the calculation of the ways in and out, it is likely better to take "dead ends" into account
 	graph.read_graph_from_osm(osm_file, include_way, include_node, true);
+	cout << "Read " << graph.get_n_nodes() << " nodes and " << graph.get_n_edges() << " edges from file " << osm_file << endl;
 	if(graph.get_n_nodes() == 0)
 	{
 		cout << "The graph does not have any edges and nodes. Is the region corresponding to the center point and the radius included in your *.osm.pbf file?" << endl;
