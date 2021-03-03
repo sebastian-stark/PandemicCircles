@@ -33,14 +33,16 @@ the exterior circle, thirdly manually choose the start and end point for the way
 algorithms than the one used here may be better for the computation of the exterior circle (one could e.g. devise a "contour following" algorithm).
 
 To compile the program:
-(1) install the library GraphLib (together with its dependencies libosmium and ZLIB), see https://github.com/sebastian-stark/GraphLib.
-(2) place library source files into some folder /path/to/folder/PandemicCircles (you can use e.g. git clone https://github.com/sebastian-stark/PandemicCircles.git from /path/to/folder for this)
-(3) cd /path/to/folder/PandemicCircles
-(4) cmake -DGRAPH_LIB_DIR=~/path/to/graph_lib .
-(5) make
+
+1. install the library GraphLib (together with its dependencies libosmium and ZLIB), see https://github.com/sebastian-stark/GraphLib.
+2. place library source files into some folder /path/to/folder/PandemicCircles (you can use e.g. git clone https://github.com/sebastian-stark/PandemicCircles.git from /path/to/folder for this)
+3. cd /path/to/folder/PandemicCircles
+4. cmake -DGRAPH_LIB_DIR=~/path/to/graph_lib .
+5. make
 
 To run the program:
-(1) Generate an *.osm.pbf file with the relevant map information. This file should only cover the region really needed for the generation of the route. Use e.g. Osmium tool (command "osmium extract") to clip a larger *.osm.pbf file.
-(2) cd /path/to/folder/PandemicCircles
-(3) Use command ./pandemic_circles lat=00.00000 lon=00.00000 r=00.00000 file=your_file.osm.pbf to run the program, with appropriate values for the latitude of the center of the circle in degrees (lat), the longitude of the center of the circle in degrees (lon), the radius of the circle in km (r) and the file name (including path) for your  *.osm.pbf file (file)
-(4) If successful, this will create the svg file /path/to/folder/PandemicCircles/map.svg showing the route (however, if there are too many edges in the graph, the svg file may become too large for being displayed)
+
+1. Generate an \*.osm.pbf file with the relevant map information. This file should only cover the region really needed for the generation of the route. Use e.g. Osmium tool (command "osmium extract") to clip a larger \*.osm.pbf file.
+2. cd /path/to/folder/PandemicCircles
+3. Use command ./pandemic_circles lat=00.00000 lon=00.00000 r=00.00000 file=your_file.osm.pbf to run the program, with appropriate values for the latitude of the center of the circle in degrees (lat), the longitude of the center of the circle in degrees (lon), the radius of the circle in km ( r ) and the file name (including path) for your \*.osm.pbf file (file)
+4. If successful, this will create the svg file /path/to/folder/PandemicCircles/map.svg showing the route (however, if there are too many edges in the graph, the svg file may become too large for being displayed)
