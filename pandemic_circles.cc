@@ -58,17 +58,56 @@ using namespace std;
  * the exterior circle, thirdly manually choose the start and end point for the ways in and out, finally compute the ways in and out and join the route). Alternatively, other
  * algorithms than the one used here may be better for the computation of the exterior circle (one could e.g. devise a "contour following" algorithm).
  */
-int main()
+int main(int argc, char *argv[])
 {
 
 /* input data : longitude of center, latitude of center, radius of circle, mean radius of earth */
 
-	const double lat = 51.05871;				// latitude of center of circle (degrees)
-	const double lon = 13.77054;				// longitutde of center of circle (degrees)
-	const double r = 15.0;						// radius of circle (km)
-	const double r_earth = 6371.0;				// radius of earth	(km)
-	const string osm_file = "dresden.osm.pbf";	// the input OSM file for the way and node data
-	assert( r < M_PI * r_earth );
+	vector<string> arguments;
+    for(unsigned int arg = 0; arg < (unsigned int)argc; ++arg)
+    	arguments.push_back(argv[arg]);
+    double lat = std::numeric_limits<double>::max();	// latitude of center of circle (degrees)
+    double lon = std::numeric_limits<double>::max();	// longitutde of center of circle (degrees)
+    double r = std::numeric_limits<double>::max();		// radius of circle (km)
+    string osm_file = "";								// the input OSM file for the way and node data
+    for(const auto& argument : arguments)
+    {
+    	if(argument.find("lat=") == 0)
+    		lat = stod(argument.substr(4));
+    	else if(argument.find("lon=") == 0)
+    		lon = stod(argument.substr(4));
+    	else if(argument.find("r=") == 0)
+    		r = stod(argument.substr(2));
+    	else if(argument.find("file=") == 0)
+    		osm_file = argument.substr(5);
+
+    }
+    if(lat == std::numeric_limits<double>::max())
+    {
+    	cout << "Could not determine latitude of center point. Did you provide lat=... as command line argument?" << endl;
+    	return 0;
+    }
+    if(lon == std::numeric_limits<double>::max())
+    {
+    	cout << "Could not determine longitude of center point. Did you provide lon=... as command line argument?" << endl;
+    	return 0;
+    }
+    if(r == std::numeric_limits<double>::max())
+    {
+    	cout << "Could not determine radius of circle. Did you provide r=... as command line argument?" << endl;
+    	return 0;
+    }
+    if(osm_file == "")
+    {
+    	cout << "Could not determine OSM file name. Did you provide file=... as command line argument?" << endl;
+    	return 0;
+    }
+	const double r_earth = 6371.0;				// mean radius of earth	(km)
+	if(r >= M_PI * r_earth)
+	{
+		cout << "The radius may not be larger than " << M_PI * r_earth << " km." << endl;
+		return 0;
+	}
 
 /* filters for extraction of way and node data from OSM */
 
@@ -166,7 +205,11 @@ int main()
 	// read the osm.pbf file (eliminate "dead ends" as this reduces the possibility for error of the algorithm computing the exterior circle)
 	// Todo: for the calculation of the ways in and out, it is likely better to take "dead ends" into account
 	graph.read_graph_from_osm(osm_file, include_way, include_node, true);
-	assert(("The graph does not have any edges and nodes. Is the region corresponding to the center point and the radius included in your *.osm.pbf file?", graph.get_n_nodes() > 0));
+	if(graph.get_n_nodes() == 0)
+	{
+		cout << "The graph does not have any edges and nodes. Is the region corresponding to the center point and the radius included in your *.osm.pbf file?" << endl;
+		return 0;
+	}
 
 /* Compute exterior circle */
 
@@ -243,7 +286,10 @@ int main()
 		cuts.pop();
 	}
 	if(circular_path.size() == 0)
-		assert(("Did not find a circular path", false));
+	{
+		cout << "Did not find a circular path" << endl;
+		return 0;
+	}
 	// undo blocking of edges
 	while(!cuts_copy.empty())
 	{
