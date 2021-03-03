@@ -16,7 +16,7 @@ With this approach, for most cases, the Dijkstra algorithm should give a reasona
 Subsequent to the computation of the exterior circle, a "way out" from a node close to the center point to a point on the exterior circle is calculated
 as well as a "way in" from the same point on the exterior circle back to the center point. The start node for the way out (corresponds to the end node for
 the way in) is chosen to be as close as possible to the center point with regard to the standard metric. The node on the exterior circle (end node for way out and
-start node for way in) is chosen to be as close to the center point as well in order to minimize the distance covered to reach the exterior circle and come back.
+start node for way in) is chosen to be as close as possible to the center point as well in order to minimize the distance covered to reach the exterior circle and come back.
 For the computations of the ways in and out, Dijkstra's algorithm is used together with the standard metric.
 
 Finally, the way out, the exterior circle and the way in are joined to a single route.
