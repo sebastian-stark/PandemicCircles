@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 {
 /* filters for ways to be used */
 
-	const map<string, set<string>> include_tags = { {"highway", {"residential", "trunk", "primary", "secondary", "tertiary", "unclassified", "trunk_link", "primary_link", "secondary_link", "tertiary_link", "living_street", "road"}} };
+	const map<string, set<string>> include_tags = { {"highway", {"track", "residential", "trunk", "primary", "secondary", "tertiary", "unclassified", "trunk_link", "primary_link", "secondary_link", "tertiary_link", "living_street", "road"}} };
 	const map<string, set<string>> exclude_tags = { {"bicycle", {"no", "dismount"}},
 													{"area", {"yes"}},
 													{"access", {"no", "private"}}};

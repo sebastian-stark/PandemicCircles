@@ -37,7 +37,7 @@ To compile the program:
 1. install the library GraphLib (together with its dependencies libosmium and ZLIB), see https://github.com/sebastian-stark/GraphLib.
 2. place library source files into some folder /path/to/folder/PandemicCircles (you can use e.g. git clone https://github.com/sebastian-stark/PandemicCircles.git from /path/to/folder for this)
 3. cd /path/to/folder/PandemicCircles
-4. optionally: if you want to modify the ways to be included into the considerations, modify the include_tags and exclude_tags variables in /path/to/folder/PandemicCircles/pandemic_circles.cc appropriately. If a way is tagged with any of the tag/key combinations contained in include_tags, it is included into the considerations, unless the way also involves a tag/key combination contained in exclude_tags
+4. optionally: if you want to modify the ways to be included into the considerations, modify the include_tags and exclude_tags variables in /path/to/folder/PandemicCircles/pandemic_circles.cc appropriately. If a way is tagged with any of the tag/key combinations contained in include_tags, it is included into the considerations, unless the way also involves a tag/key combination contained in exclude_tags. Attention: With the predefined tags, not only paved roads, but also tracks are included. So, the resulting routes are typically not suitable for road bikes. If you want something rideable with a road bike, remove "track" from the include_tags.
 5. cmake -DGRAPH_LIB_DIR=~/path/to/graph_lib .
 6. make
 
