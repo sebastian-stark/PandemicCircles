@@ -40,46 +40,49 @@ int main(int argc, char *argv[])
 /* input data : longitude of center, latitude of center, radius of circle, mean radius of earth */
 
 	vector<string> arguments;
-    for(unsigned int arg = 0; arg < (unsigned int)argc; ++arg)
-    	arguments.push_back(argv[arg]);
-    double lat = std::numeric_limits<double>::max();	// latitude of center of circle (degrees)
-    double lon = std::numeric_limits<double>::max();	// longitutde of center of circle (degrees)
-    double r = std::numeric_limits<double>::max();		// radius of circle (km)
-    string osm_file = "";								// the input OSM file for the way and node data
-    string svg_output_file = "";						// the file into which svg output is written (if not provided, no svg is written)
-    for(const auto& argument : arguments)
-    {
-    	if(argument.find("lat=") == 0)
-    		lat = stod(argument.substr(4));
-    	else if(argument.find("lon=") == 0)
-    		lon = stod(argument.substr(4));
-    	else if(argument.find("r=") == 0)
-    		r = stod(argument.substr(2));
-    	else if(argument.find("file=") == 0)
-    		osm_file = argument.substr(5);
-    	else if(argument.find("svg_output_file=") == 0)
-    		svg_output_file = argument.substr(16);
-    }
-    if(lat == std::numeric_limits<double>::max())
-    {
-    	cout << "Could not determine latitude of center point. Did you provide lat=... as command line argument?" << endl;
-    	return 0;
-    }
-    if(lon == std::numeric_limits<double>::max())
-    {
-    	cout << "Could not determine longitude of center point. Did you provide lon=... as command line argument?" << endl;
-    	return 0;
-    }
-    if(r == std::numeric_limits<double>::max())
-    {
-    	cout << "Could not determine radius of circle. Did you provide r=... as command line argument?" << endl;
-    	return 0;
-    }
-    if(osm_file == "")
-    {
-    	cout << "Could not determine OSM file name. Did you provide file=... as command line argument?" << endl;
-    	return 0;
-    }
+	for(unsigned int arg = 0; arg < (unsigned int)argc; ++arg)
+		arguments.push_back(argv[arg]);
+	double lat = std::numeric_limits<double>::max();	// latitude of center of circle (degrees)
+	double lon = std::numeric_limits<double>::max();	// longitutde of center of circle (degrees)
+	double r = std::numeric_limits<double>::max();		// radius of circle (km)
+	string osm_file = "";								// the input OSM file for the way and node data
+	string svg_output_file = "";						// the file into which svg output is written (if not provided, no svg is written)
+	string gpx_output_file = "";						// the file into which gpx output is written (if not provided, no gpx is written)
+	for(const auto& argument : arguments)
+	{
+		if(argument.find("lat=") == 0)
+			lat = stod(argument.substr(4));
+		else if(argument.find("lon=") == 0)
+			lon = stod(argument.substr(4));
+		else if(argument.find("r=") == 0)
+			r = stod(argument.substr(2));
+		else if(argument.find("file=") == 0)
+			osm_file = argument.substr(5);
+		else if(argument.find("svg_output_file=") == 0)
+			svg_output_file = argument.substr(16);
+		else if(argument.find("gpx_output_file=") == 0)
+			gpx_output_file = argument.substr(16);
+	}
+	if(lat == std::numeric_limits<double>::max())
+	{
+		cout << "Could not determine latitude of center point. Did you provide lat=... as command line argument?" << endl;
+		return 0;
+	}
+	if(lon == std::numeric_limits<double>::max())
+	{
+		cout << "Could not determine longitude of center point. Did you provide lon=... as command line argument?" << endl;
+		return 0;
+	}
+	if(r == std::numeric_limits<double>::max())
+	{
+		cout << "Could not determine radius of circle. Did you provide r=... as command line argument?" << endl;
+		return 0;
+	}
+	if(osm_file == "")
+	{
+		cout << "Could not determine OSM file name. Did you provide file=... as command line argument?" << endl;
+		return 0;
+	}
 	const double r_earth = 6371.0;				// mean radius of earth	(km)
 	if(r >= M_PI * r_earth)
 	{
@@ -330,29 +333,34 @@ int main(int argc, char *argv[])
 /* Join the way out, the exterior circle and the way in into a single route; also compute distance of the route */
 
 	list<pair<const Edge*, Direction>> route;
-	double distance = 0.0;
 	const auto path_adder = [&](list<pair<const Edge*, Direction>>::iterator begin_it, list<pair<const Edge*, Direction>>::iterator end_it) -> void
 	{
 		for(auto edge_it = begin_it; edge_it != end_it; ++edge_it)
-		{
 			route.push_back(*edge_it);
-			distance += edge_it->first->get_length(standard_metric);
-		}
 	};
 	path_adder(way_out.begin(), way_out.end());
 	path_adder(start_edge, circular_path.end());
 	path_adder(circular_path.begin(), start_edge);
 	path_adder(way_in.begin(), way_in.end());
-	cout << "Calculated loop with total distance of " << distance << " km" << endl;
+	cout << "Successfully generated route" << endl;
 
-/* Write to svg file */
+/* Write to files */
 
 	// mark computed path
 	for(const auto& edge : route)
 		edge.first->set_user_flag();
-	// write
+	// write svg if requested
 	if(svg_output_file != "")
-	graph.write_svg(svg_output_file, azimuthal_projection, true);
+	{
+		graph.write_svg(svg_output_file, azimuthal_projection, true);
+		cout << "svg file written" << endl;
+	}
+	// write gpx if requested
+	if(gpx_output_file != "")
+	{
+		graph.write_gpx(gpx_output_file, route, gpx_output_file);
+		cout << "gpx file written" << endl;
+	}
 
 	return 0;
 }

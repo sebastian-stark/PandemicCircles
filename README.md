@@ -43,10 +43,9 @@ To compile the program:
 
 To run the program:
 
-1. Generate an \*.osm.pbf file with the relevant map information. This file should only cover the region really needed for the generation of the route. Use e.g. Osmium tool (command "osmium extract") to clip a larger \*.osm.pbf file.
+1. Generate an \*.osm.pbf file with the relevant map information. This file should only cover the region really needed for the generation of the route. Use e.g. Osmium tool (command "osmium extract") to clip a larger \*.osm.pbf file. Put the \*.osm.pbf file into /path/to/folder/PandemicCircles.
 2. cd /path/to/folder/PandemicCircles
-3. Use command "./pandemic_circles lat=00.00000 lon=00.00000 r=00.00000 file=your_file.osm.pbf svg_output_file=your_svg_file.svg" to run the program, with appropriate values for the latitude of the center of the circle in degrees (lat), the longitude of the center of the circle in degrees (lon), the radius of the circle in km ( r ), the file name (including path) for your \*.osm.pbf file (file),
-and (optionally) an svg file into which the map and the route are written (svg_output_file)
-4. If successful, this will print the distance of the route to screen. If requested, an svg file /path/to/folder/PandemicCircles/your_svg_file.svg showing the route is written (however, if there are too many edges in the graph, the svg file may become too large for being displayed)
+3. Use command "./pandemic_circles lat=00.00000 lon=00.00000 r=00.00000 file=your_file.osm.pbf svg_output_file=your_svg_file.svg gpx_output_file=your_gpx_file.gpx" to run the program, with appropriate values for the latitude of the center of the circle in degrees (lat), the longitude of the center of the circle in degrees (lon), the radius of the circle in km ( r ), the file name of your \*.osm.pbf file (file), optionally an svg file into which the map and the route are written (svg_output_file), and optionally a gpx file into which the route is written (gpx_output_file).
+4. If successful and the respective file names are provided, this will write an svg file /path/to/folder/PandemicCircles/your_svg_file.svg (however, if there are too many edges in the graph, the svg file may become too large for being displayed) and a gpx file /path/to/folder/PandemicCircles/your_gpx_file.gpx
 
 
