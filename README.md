@@ -37,8 +37,9 @@ To compile the program:
 1. install the library GraphLib (together with its dependencies libosmium and ZLIB), see https://github.com/sebastian-stark/GraphLib.
 2. place library source files into some folder /path/to/folder/PandemicCircles (you can use e.g. git clone https://github.com/sebastian-stark/PandemicCircles.git from /path/to/folder for this)
 3. cd /path/to/folder/PandemicCircles
-4. cmake -DGRAPH_LIB_DIR=~/path/to/graph_lib .
-5. make
+4. optionally: if you want to modify the ways to be included into the considerations, modify the include_tags and exclude_tags variables in /path/to/folder/PandemicCircles/pandemic_circles.cc appropriately. If a way is tagged with any of the tag/key combinations contained in include_tags, it is included into the considerations, unless the way also involves a tag/key combination contained in exclude_tags
+5. cmake -DGRAPH_LIB_DIR=~/path/to/graph_lib .
+6. make
 
 To run the program:
 
@@ -46,3 +47,5 @@ To run the program:
 2. cd /path/to/folder/PandemicCircles
 3. Use command ./pandemic_circles lat=00.00000 lon=00.00000 r=00.00000 file=your_file.osm.pbf to run the program, with appropriate values for the latitude of the center of the circle in degrees (lat), the longitude of the center of the circle in degrees (lon), the radius of the circle in km ( r ) and the file name (including path) for your \*.osm.pbf file (file)
 4. If successful, this will create the svg file /path/to/folder/PandemicCircles/map.svg showing the route (however, if there are too many edges in the graph, the svg file may become too large for being displayed)
+
+

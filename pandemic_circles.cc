@@ -26,40 +26,16 @@ using namespace GraphLib;
 using namespace std;
 
 /**
- * A small program computing routes approximating a circle given a center point and a radius. The program is based on the library GraphLib, which allows
- * to convert OSM data into a graph.
- *
- * The computation first starts with computing a closed "exterior circle". For this computation, it is tried to
- * put all way points close to the maximum radius without ever exceeding the maximum distance (=radius of the circle) from the center.
- * For the computation of the circle, the map is cut along a single radial line starting at the center point by "blocking" edges crossing that radial line.
- * Then, a pair of corresponding nodes on the cut faces (i.e., nodes belonging to a blocked edge) are used as start and end point for the
- * computation of the circle. Since the cut face is completely blocked, the resulting route must generally enclose the center point. However,
- * this will not necessarily give a good approximation to a circle if the standard metric is used and the circle is computed with a "shortest path algorithm" (here: Dijkstra's algorithm).
- * Therefore, a "distorted metric" is used, which gives edges far away from the center point small weight, while edges close to the center get large weights assigned.
- * Furthermore, the start/end node pair of the circle is chosen such that it is as far away from the center point as possible.
- * With this approach, for most cases, the Dijkstra algorithm should give a reasonable approximation to a circle with maximum distance from the center point.
- *
- * Subsequent to the computation of the exterior circle, a "way out" from a node close to the center point to a point on the exterior circle is calculated
- * as well as a "way in" from the same point on the exterior circle back to the center point. The start node for the way out (corresponds to the end node for
- * the way in) is chosen to be as close as possible to the center point with regard to the standard metric. The node on the exterior circle (end node for way out and
- * start node for way in) is chosen to be as close as possible to the center point as well in order to minimize the distance covered to reach the exterior circle and come back.
- * For the computations of the ways in and out, Dijkstra's algorithm is used together with the standard metric.
- *
- * Finally, the way out, the exterior circle and the way in are joined to a single route.
- *
- * The algorithm has no guarantee to succeed. In general, a sufficiently dense network of ways will be required. Also, the success of the algorithm
- * depends on the choice of the radial cut line (which is currently fixed to be the line given by points x=0, y>0 in an azimuthal equidistant projection,
- * although this may easily be changed). The implementation will try several start/end nodes for the computation of the exterior circle (starting from
- * the pair furthest away from the center point) until an exterior circle is successfully computed. Also, for the computation of the ways out and in different
- * nodes close to the center points will be tried (starting from the node closest to the center point) until the ways in and out are successfully computed.
- * Todo: Even with the described measures, it is not hard to construct examples, where the algorithm will not find any route despite the presence of a reasonable route.
- * This issue could be largely eliminated by implementing smarter algorithms for choosing the start node for the route, the cut line for the computation of the
- * exterior circle, and the node where the ways in and out hit the exterior circle (or one could use the following manual procedure: Firstly, choose the cut line, secondly compute
- * the exterior circle, thirdly manually choose the start and end point for the ways in and out, finally compute the ways in and out and join the route). Alternatively, other
- * algorithms than the one used here may be better for the computation of the exterior circle (one could e.g. devise a "contour following" algorithm).
+ * A small program computing routes approximating a circle given a center point and a radius. For further information, see README.md
  */
 int main(int argc, char *argv[])
 {
+/* filters for ways to be used */
+
+	const map<string, set<string>> include_tags = { {"highway", {"residential", "trunk", "primary", "secondary", "tertiary", "unclassified", "trunk_link", "primary_link", "secondary_link", "tertiary_link", "living_street", "road"}} };
+	const map<string, set<string>> exclude_tags = { {"bicycle", {"no", "dismount"}},
+													{"area", {"yes"}},
+													{"access", {"no", "private"}}};
 
 /* input data : longitude of center, latitude of center, radius of circle, mean radius of earth */
 
@@ -112,8 +88,6 @@ int main(int argc, char *argv[])
 /* filters for extraction of way and node data from OSM */
 
 	// define the function filtering the ways to be included based on the tags of the way
-	const map<string, set<string>> exclude_tags = { {"bicycle", {"no", "dismount"}}, {"area", {"yes"}}, {"access", {"no", "private"}}};
-	const map<string, set<string>> include_tags = { {"highway", {"residential", "trunk", "primary", "secondary", "tertiary", "unclassified", "trunk_link", "primary_link", "secondary_link", "tertiary_link", "living_street", "road"}} };
 	const auto include_way = [&](const osmium::Way& way) -> bool
 	{
 		bool include = false;
