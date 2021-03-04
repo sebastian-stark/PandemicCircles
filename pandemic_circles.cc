@@ -46,6 +46,7 @@ int main(int argc, char *argv[])
     double lon = std::numeric_limits<double>::max();	// longitutde of center of circle (degrees)
     double r = std::numeric_limits<double>::max();		// radius of circle (km)
     string osm_file = "";								// the input OSM file for the way and node data
+    string svg_output_file = "";						// the file into which svg output is written (if not provided, no svg is written)
     for(const auto& argument : arguments)
     {
     	if(argument.find("lat=") == 0)
@@ -56,7 +57,8 @@ int main(int argc, char *argv[])
     		r = stod(argument.substr(2));
     	else if(argument.find("file=") == 0)
     		osm_file = argument.substr(5);
-
+    	else if(argument.find("svg_output_file=") == 0)
+    		svg_output_file = argument.substr(16);
     }
     if(lat == std::numeric_limits<double>::max())
     {
@@ -349,7 +351,8 @@ int main(int argc, char *argv[])
 	for(const auto& edge : route)
 		edge.first->set_user_flag();
 	// write
-	graph.write_svg("map.svg", azimuthal_projection, true);
+	if(svg_output_file != "")
+	graph.write_svg(svg_output_file, azimuthal_projection, true);
 
 	return 0;
 }
