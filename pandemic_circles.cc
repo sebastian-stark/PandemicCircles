@@ -173,7 +173,7 @@ int main(int argc, char *argv[])
 		const double r_1 = sqrt( p_1_ap.first * p_1_ap.first + p_1_ap.second * p_1_ap.second );
 		const double r_2 = sqrt( p_2_ap.first * p_2_ap.first + p_2_ap.second * p_2_ap.second );
 		const double r_avg = 0.5 * (r_1 + r_2);
-		return sqrt( (dx * dx + dy * dy) / r_avg / r_avg ) / pow(r_avg / r, 10.0);
+		return sqrt( (dx * dx + dy * dy) / r_avg / r_avg ) / pow(r_avg / r, 10.0);	// note: normalize with r_avg
 	};
 
 /* Set up graph and read file */
